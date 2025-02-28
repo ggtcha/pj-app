@@ -3,3 +3,15 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
 }
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        // เพิ่มเวอร์ชัน AGP ที่รองรับ
+        classpath("com.android.tools.build:gradle:8.7.3")
+    }
+}
