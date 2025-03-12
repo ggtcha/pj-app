@@ -42,9 +42,9 @@ class MainActivity : AppCompatActivity() {
             val selectedFragment = when (menuItem.itemId) {
                 R.id.nav_home -> HomeFragment()
                 R.id.nav_cart -> CartFragment()
-                R.id.nav_favorites -> FavoritesFragment()
-                R.id.nav_products -> ProductListFragment()
                 R.id.nav_profile -> ProfileFragment()
+                R.id.nav_products -> BookingListFragment()
+                R.id.nav_booking -> BookingFragment()
                 else -> null
             }
 

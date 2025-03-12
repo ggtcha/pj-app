@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <!-- HomeFragment: หน้าแรกของการแสดงที่พัก -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="scisrc.mobiledev.ecommercelayout.ui.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+
+
+    <!-- BookingFragment: ระบบการจองที่พัก -->
+    <fragment
+        android:id="@+id/bookingFragment"
+        android:name="scisrc.mobiledev.ecommercelayout.ui.BookingFragment"
+        android:label="BookingFragment"
+        tools:layout="@layout/fragment_booking">
+        <!-- การทำงานจาก HomeFragment ไปยัง BookingFragment -->
+        <action
+            android:id="@+id/action_homeFragment_to_bookingFragment"
+            app:destination="@id/bookingFragment" />
+    </fragment>
+
+    <!-- CartFragment เปลี่ยนชื่อเป็น BookingFragment เพื่อเชื่อมโยงกับระบบการจอง -->
+
+</navigation>

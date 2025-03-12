@@ -8,6 +8,11 @@
 
     <!-- เพิ่มสีเนื้อ -->
     <color name="beige">#FAE4A8</color> <!-- สีเนื้ออ่อน -->
-    <color name="skin_tone">#EACDA3</color> <!-- สีเนื้อกลาง -->
+    <color name="confirm_button_background">#EACDA3</color> <!-- สีเนื้อกลาง -->
     <color name="tan">#D2A679</color> <!-- สีเนื้อเข้ม -->
+    <color name="colorPrimary">#644015</color>
+    <color name="colorPrimaryy">#000000</color>
+    <color name="colorAccent">#0000FF</color>
+    <color name="nav">#37763B</color>
+    <color name="colorSecondary">#808080</color>
 </resources>

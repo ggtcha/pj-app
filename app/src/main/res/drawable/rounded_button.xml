@@ -1,0 +1,5 @@
+<!-- res/drawable/rounded_button.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid  android:textColor="@color/colorPrimaryy"/> <!-- สีพื้นหลัง -->
+    <corners android:radius="16dp"/> <!-- กำหนดมุมโค้ง -->
+</shape>

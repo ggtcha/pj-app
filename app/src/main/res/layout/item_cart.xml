@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    android:layout_margin="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- รูปภาพบ้านพัก -->
+        <ImageView
+            android:id="@+id/parkImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_pen" />
+
+        <!-- ข้อมูลบ้านพัก -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- ชื่อบ้านพัก -->
+            <TextView
+                android:id="@+id/parkName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ชื่อบ้านพัก"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black" />
+
+            <!-- รายละเอียดบ้านพัก -->
+            <TextView
+                android:id="@+id/parkDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="รายละเอียดของบ้านพัก"
+                android:textSize="14sp"
+                android:textColor="@android:color/darker_gray" />
+
+            <!-- ราคา -->
+            <TextView
+                android:id="@+id/parkPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ราคา: 1000 บาท"
+                android:textSize="14sp"
+                android:textColor="@android:color/holo_green_dark" />
+
+        </LinearLayout>
+
+        <!-- ปุ่มลบ -->
+        <ImageButton
+            android:id="@+id/btnRemove"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="ลบการจอง"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_gravity="center_vertical"
+            android:padding="8dp"
+            android:onClick="onRemoveClick" />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
