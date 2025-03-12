@@ -109,6 +109,48 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_total_price" />
 
+        <!-- เพิ่มปุ่มยืนยันคิดเงินและคืนบ้าน -->
+        <Button
+            android:id="@+id/confirmCheckoutButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#28a745"
+            android:text="ยืนยันคิดเงิน"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_checkout"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/confirmReturnButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#FF5733"
+            android:text="ยืนยันคืนบ้าน"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/confirmCheckoutButton"
+            android:visibility="gone" />
+
+        <!-- เพิ่ม TextView สำหรับแสดงสถานะการจอง -->
+        <TextView
+            android:id="@+id/bookingStatusTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="สถานะการจอง: รอการชำระเงิน"
+            android:textSize="16sp"
+            android:textColor="#FF5733"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/confirmReturnButton"
+            android:layout_marginTop="16dp"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
