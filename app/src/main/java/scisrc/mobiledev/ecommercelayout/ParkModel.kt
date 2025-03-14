@@ -10,4 +10,5 @@ data class ParkModel(
     val imageRes: Int,
     val description: String,
     var isFavorite: Boolean = false,
+
 ) : Serializable

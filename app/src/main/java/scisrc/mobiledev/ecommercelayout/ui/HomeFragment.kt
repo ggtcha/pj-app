@@ -1,6 +1,8 @@
 package scisrc.mobiledev.ecommercelayout.ui
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +11,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
+import me.relex.circleindicator.CircleIndicator3
 import scisrc.mobiledev.ecommercelayout.ParkModel
 import scisrc.mobiledev.ecommercelayout.R
 import androidx.fragment.app.FragmentTransaction
@@ -48,13 +52,43 @@ class HomeFragment : Fragment() {
         // เพิ่มข้อมูลอุทยานอื่นๆ ที่นี่
     )
 
+    private lateinit var bannerViewPager: ViewPager2
+    private lateinit var bannerIndicator: CircleIndicator3
+    private val bannerHandler = Handler(Looper.getMainLooper())
+
+    private val bannerRunnable = object : Runnable {
+        override fun run() {
+            val currentItem = bannerViewPager.currentItem
+            val itemCount = bannerViewPager.adapter?.itemCount ?: 0
+            if (itemCount > 0) {
+                bannerViewPager.currentItem = (currentItem + 1) % itemCount
+            }
+            bannerHandler.postDelayed(this, 3000) // เลื่อนทุก 3 วินาที
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+        // Banner ViewPager setup
+        bannerViewPager = view.findViewById(R.id.bannerViewPager)
+        bannerIndicator = view.findViewById(R.id.bannerIndicator)
+
+        val bannerImageList = listOf(
+            R.drawable.banner1,
+            R.drawable.banner2,
+            R.drawable.banner3
+        )
+        val bannerAdapter = HeaderImageAdapter(bannerImageList)
+        bannerViewPager.adapter = bannerAdapter
+
+        bannerIndicator.setViewPager(bannerViewPager)
+
+        // RecyclerView setup
         recommendedProductsRecycler = view.findViewById(R.id.recommendedProductsRecycler)
-        recommendedProductsRecycler.layoutManager = LinearLayoutManager(context) // แก้ไขตรงนี้: เปลี่ยนเป็น LinearLayoutManager(context) เพื่อแสดงรายการแนวตั้ง
+        recommendedProductsRecycler.layoutManager = LinearLayoutManager(context)
 
         parkAdapter = ParkAdapter(parkList) { park ->
             // เมื่อคลิกที่รายการอุทยาน
@@ -72,6 +106,16 @@ class HomeFragment : Fragment() {
         recommendedProductsRecycler.adapter = parkAdapter
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        bannerHandler.postDelayed(bannerRunnable, 3000)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        bannerHandler.removeCallbacks(bannerRunnable)
     }
 
     private inner class ParkAdapter(
