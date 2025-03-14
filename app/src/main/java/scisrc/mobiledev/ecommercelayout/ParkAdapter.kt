@@ -29,10 +29,9 @@ class ParkAdapter(
     override fun getItemCount() = parkList.size
 
     inner class ParkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val parkImageView: ImageView = itemView.findViewById(R.id.parkImage)
+        private val parkImageView: ImageView = itemView.findViewById(R.id.parkImageView) // แก้ไขตรงนี้
         private val parkNameTextView: TextView = itemView.findViewById(R.id.parkNameTextView)
         private val priceTextView: TextView = itemView.findViewById(R.id.priceTextView)
-        private val bookButton: Button = itemView.findViewById(R.id.bookButton)
 
         fun bind(park: ParkModel) {
             parkNameTextView.text = park.name
@@ -42,10 +41,7 @@ class ParkAdapter(
             parkImageView.setImageResource(park.imageRes) // ตรวจสอบให้แน่ใจว่า park.imageRes เป็น resource ID ที่ถูกต้อง
 
 
-            // Handle the booking button click
-            bookButton.setOnClickListener {
-                onBookClick(park)
-            }
+
         }
     }
 }

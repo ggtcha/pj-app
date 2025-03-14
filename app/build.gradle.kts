@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.navigation.safe.args)
 }
 
 android {
@@ -9,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "scisrc.mobiledev.ecommercelayout"
-        minSdk = 24  // ลด minSdk เพื่อรองรับอุปกรณ์เก่าขึ้น
+        minSdk = 24
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -28,12 +29,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17  //
+        sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "17"  // อัปเดตให้รองรับ JVM 17
+        jvmTarget = "17"
     }
 
     buildFeatures {
@@ -42,15 +43,15 @@ android {
 }
 
 dependencies {
-    // ✅ เพิ่ม ViewPager2
+    // ViewPager2
     implementation("androidx.viewpager2:viewpager2:1.0.0")
 
-    // ✅ เพิ่ม CircleIndicator3
+    // CircleIndicator3
     implementation("me.relex:circleindicator:2.1.6")
 
-    implementation ("de.hdodenhof:circleimageview:3.1.0")
+    implementation("de.hdodenhof:circleimageview:3.1.0")
 
-    // ของเดิม
+    // Core dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -59,6 +60,12 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+
+    // Navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

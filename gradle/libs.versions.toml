@@ -1,6 +1,6 @@
 [versions]
 agp = "8.7.3"
-kotlin = "1.9.24"
+kotlin = "1.9.22"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -12,6 +12,7 @@ constraintlayout = "2.2.0"
 navigationRuntimeAndroid = "2.9.0-alpha05"
 navigationFragmentKtx = "2.8.6"
 navigationUiKtx = "2.8.6"
+navigation = "2.7.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,4 +30,5 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
+navigation-safe-args = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" } # Add this line
+kotlin-parcelize = { id = "kotlin-parcelize", version.ref = "kotlin"}

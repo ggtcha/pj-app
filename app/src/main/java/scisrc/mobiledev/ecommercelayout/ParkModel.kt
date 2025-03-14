@@ -1,5 +1,7 @@
 package scisrc.mobiledev.ecommercelayout
 
+import java.io.Serializable
+
 data class ParkModel(
     val name: String,
     val price: Double,
@@ -8,4 +10,4 @@ data class ParkModel(
     val imageRes: Int,
     val description: String,
     var isFavorite: Boolean = false,
-)
+) : Serializable

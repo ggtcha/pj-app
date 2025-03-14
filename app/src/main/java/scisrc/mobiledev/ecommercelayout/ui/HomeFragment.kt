@@ -1,134 +1,102 @@
 package scisrc.mobiledev.ecommercelayout.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
-import me.relex.circleindicator.CircleIndicator3
 import scisrc.mobiledev.ecommercelayout.ParkModel
 import scisrc.mobiledev.ecommercelayout.R
-import android.widget.Toast
-import scisrc.mobiledev.ecommercelayout.FavoritesManager
-import scisrc.mobiledev.ecommercelayout.BookingManager
+import androidx.fragment.app.FragmentTransaction
 
 class HomeFragment : Fragment() {
 
-    private lateinit var recommendedRecyclerView: RecyclerView
-    private lateinit var recommendedAdapter: ParkAdapter
-    private val recommendedParks = mutableListOf<ParkModel>()
+    private lateinit var recommendedProductsRecycler: RecyclerView
+    private lateinit var parkAdapter: ParkAdapter
+    private val parkList = listOf(
+        ParkModel(
+            name = "อุทยานแห่งชาติบึงฉวาก",
+            price = 1200.0,
+            availability = true,
+            location = "สุพรรณบุรี",
+            imageRes = R.drawable.bungchawak,
+            description = "ที่พักในอุทยานแห่งชาติบึงฉวาก ตั้งอยู่ท่ามกลางธรรมชาติ อากาศบริสุทธิ์ เหมาะสำหรับการพักผ่อนแบบครอบครัวและการเดินป่าศึกษาธรรมชาติ",
+            isFavorite = false
+        ),
+        ParkModel(
+            name = "อุทยานแห่งชาติปางสีดา",
+            price = 1000.0,
+            availability = true,
+            location = "สระแก้ว",
+            imageRes = R.drawable.pangsida,
+            description = "อุทยานแห่งชาติปางสีดา มีความหลากหลายของธรรมชาติ ทั้งภูเขาและป่าไม้ เส้นทางเดินป่ามีความท้าทาย พร้อมพื้นที่พักผ่อนในบรรยากาศสงบ",
+            isFavorite = false
+        ),
+        ParkModel(
+            name = "อุทยานแห่งชาติเขาใหญ่",
+            price = 1500.0,
+            availability = true,
+            location = "นครราชสีมา",
+            imageRes = R.drawable.khaoyai,
+            description = "ที่พักในอุทยานแห่งชาติเขาใหญ่ อยู่ท่ามกลางธรรมชาติที่อุดมสมบูรณ์ เหมาะสำหรับการเดินป่าและการส่องสัตว์",
+            isFavorite = false
+        ),
+        // เพิ่มข้อมูลอุทยานอื่นๆ ที่นี่
+    )
 
-    private lateinit var promotionsRecyclerView: RecyclerView
-    private lateinit var promotionsAdapter: ParkAdapter
-    private val promotionsList = mutableListOf<ParkModel>()
-
-    private lateinit var bannerViewPager: ViewPager2
-    private lateinit var bannerIndicator: CircleIndicator3
-    private val bannerHandler = Handler(Looper.getMainLooper())
-
-    private val bannerRunnable = object : Runnable {
-        override fun run() {
-            val currentItem = bannerViewPager.currentItem
-            val itemCount = bannerViewPager.adapter?.itemCount ?: 0
-            if (itemCount > 0) {
-                bannerViewPager.currentItem = (currentItem + 1) % itemCount
-            }
-            bannerHandler.postDelayed(this, 3000) // เลื่อนทุก 3 วินาที
-        }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        // เชื่อม RecyclerView บ้านพักแนะนำ
-        recommendedRecyclerView = view.findViewById(R.id.recommendedProductsRecycler)
-        recommendedRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        recommendedProductsRecycler = view.findViewById(R.id.recommendedProductsRecycler)
+        recommendedProductsRecycler.layoutManager = LinearLayoutManager(context) // แก้ไขตรงนี้: เปลี่ยนเป็น LinearLayoutManager(context) เพื่อแสดงรายการแนวตั้ง
 
-        // Mock data for recommended parks
-        recommendedParks.apply {
-            add(ParkModel("บ้านพักอุทยานแห่งชาติ", 1500.00, true, "เชียงใหม่", R.drawable.ic_pen, "บ้านพักที่ตั้งอยู่ในอุทยานแห่งชาติ"))
-            add(ParkModel("อุทยานแห่งชาติบึงฉวาก", 1200.0, true, "สุพรรณบุรี", R.drawable.bungchawak, "ที่พักในอุทยานแห่งชาติบึงฉวาก ตั้งอยู่ท่ามกลางธรรมชาติ อากาศบริสุทธิ์ เหมาะสำหรับการพักผ่อนแบบครอบครัวและการเดินป่าศึกษาธรรมชาติ"))
+        parkAdapter = ParkAdapter(parkList) { park ->
+            // เมื่อคลิกที่รายการอุทยาน
+            val parkDetailFragment = ParkDetailFragment()
+            val bundle = Bundle()
+            bundle.putString("parkName", park.name)
+            parkDetailFragment.arguments = bundle
+
+            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction() // หรือ requireActivity().supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container, parkDetailFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
         }
 
-        // Set up the adapter for the recommended parks
-        recommendedAdapter = ParkAdapter(recommendedParks, { updateFavorites(it) }, { bookPark(it) })
-        recommendedRecyclerView.adapter = recommendedAdapter
-
-        // Mock data for promotions
-        promotionsRecyclerView = view.findViewById(R.id.promotionsRecycler)
-        promotionsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-
-        promotionsList.apply {
-            add(ParkModel("อุทยานแห่งชาติไทรโยค", 1300.0, true, "กาญจนบุรี", R.drawable.saiyok, "อุทยานที่เต็มไปด้วยธรรมชาติและน้ำตกที่สวยงาม"))
-            add(ParkModel("อุทยานแห่งชาติผาแต้ม", 1300.0, true, "อุบลราชธานี", R.drawable.phataem, "อุทยานที่มีวิวทิวทัศน์สวยงามและภาพเขียนสีโบราณ"))
-            add(ParkModel("อุทยานแห่งชาติเขาใหญ่", 1300.0, true, "นครราชสีมา", R.drawable.khaoyai, "อุทยานที่มีป่าเขียวขจีและสัตว์ป่าหลากหลายชนิด"))
-            add(ParkModel("อุทยานแห่งชาติเอราวัณ", 1300.0, true, "กาญจนบุรี", R.drawable.erawan, "อุทยานแห่งชาติเอราวัณเป็นแหล่งท่องเที่ยวธรรมชาติที่มีชื่อเสียงในเรื่องน้ำตกเอราวัณที่สวยงามและพื้นที่สำหรับเดินป่า"))
-        }
-
-
-        // Set up the adapter for promotions
-        promotionsAdapter = ParkAdapter(promotionsList, { updateFavorites(it) }, { bookPark(it) })
-        promotionsRecyclerView.adapter = promotionsAdapter
+        recommendedProductsRecycler.adapter = parkAdapter
 
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private inner class ParkAdapter(
+        private val parkList: List<ParkModel>,
+        private val onItemClick: (ParkModel) -> Unit
+    ) : RecyclerView.Adapter<ParkAdapter.ParkViewHolder>() {
 
-        bannerViewPager = view.findViewById(R.id.bannerViewPager)
-        bannerIndicator = view.findViewById(R.id.bannerIndicator)
-
-        val bannerImages = listOf(R.drawable.banner1, R.drawable.banner2, R.drawable.banner3)
-
-        val adapter = BannerAdapter(bannerImages)
-        bannerViewPager.adapter = adapter
-
-        bannerIndicator.setViewPager(bannerViewPager)
-        bannerHandler.postDelayed(bannerRunnable, 3000)
-
-        bannerViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                bannerHandler.removeCallbacks(bannerRunnable)
-                bannerHandler.postDelayed(bannerRunnable, 3000)
-            }
-        })
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        bannerHandler.removeCallbacks(bannerRunnable)
-    }
-
-    // Function to handle favorite click events
-    private fun updateFavorites(park: ParkModel) {
-        park.isFavorite = !park.isFavorite
-        if (park.isFavorite) {
-            FavoritesManager.addToFavorites(park)
-        } else {
-            FavoritesManager.removeFromFavorites(park)
+        inner class ParkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            val parkImageView: ImageView = itemView.findViewById(R.id.parkImageView)
+            val parkNameTextView: TextView = itemView.findViewById(R.id.parkNameTextView)
         }
-        recommendedAdapter.notifyDataSetChanged()
-        promotionsAdapter.notifyDataSetChanged()
-    }
 
-    // Function to handle booking click events
-    private fun bookPark(park: ParkModel) {
-        if (park.availability) {
-            BookingManager.addToBookings(park)
-            showToast("จองที่พัก ${park.name} เรียบร้อยแล้ว!")
-        } else {
-            showToast("ขออภัย, ${park.name} ไม่มีที่ว่างแล้ว")
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ParkViewHolder {
+            val itemView = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_park, parent, false)
+            return ParkViewHolder(itemView)
         }
-    }
 
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        override fun onBindViewHolder(holder: ParkViewHolder, position: Int) {
+            val park = parkList[position]
+            holder.parkImageView.setImageResource(park.imageRes)
+            holder.parkNameTextView.text = park.name
+            holder.itemView.setOnClickListener { onItemClick(park) }
+        }
+
+        override fun getItemCount() = parkList.size
     }
 }
