@@ -1,0 +1,32 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_profile"
+        app:iconSize="24dp"
+        app:iconTint="@color/black"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        app:iconSize="24dp"
+        app:iconTint="@color/black"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/nav_cart"
+        android:icon="@drawable/ic_history"
+        app:iconSize="24dp"
+        app:iconTint="@color/black"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/nav_booking"
+        android:icon="@drawable/ic_booking"
+        app:iconSize="24dp"
+        app:iconTint="@color/black"
+        app:showAsAction="ifRoom"/>
+
+</menu>
