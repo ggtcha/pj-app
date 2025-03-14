@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import scisrc.mobiledev.ecommercelayout.BookingManager
-import scisrc.mobiledev.ecommercelayout.ParkModel
 import scisrc.mobiledev.ecommercelayout.R
 
 class CartFragment : Fragment() {
@@ -131,3 +130,4 @@ class CartFragment : Fragment() {
         }
     }
 }
+

@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home -> HomeFragment()
                 R.id.nav_cart -> CartFragment()
                 R.id.nav_profile -> ProfileFragment()
-                R.id.nav_products -> BookingListFragment()
                 R.id.nav_booking -> BookingFragment()
                 else -> null
             }

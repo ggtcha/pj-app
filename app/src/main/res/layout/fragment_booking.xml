@@ -101,10 +101,12 @@
                     android:id="@+id/numberOfPeopleEditText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="จำนวนผู้เข้าพัก"
+                    android:hint="จำนวนผู้เข้าพัก (สูงสุด 30 คน)"
                     android:inputType="number"
+                    android:maxLength="5"
                     android:padding="12dp"
-                    android:background="@drawable/rounded_edittext" />
+                    android:background="@drawable/rounded_edittext"
+                    android:importantForAccessibility="yes" />
             </LinearLayout>
 
             <LinearLayout

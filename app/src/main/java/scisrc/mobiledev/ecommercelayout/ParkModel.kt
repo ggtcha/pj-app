@@ -7,5 +7,5 @@ data class ParkModel(
     val location: String? = null,
     val imageRes: Int,
     val description: String,
-    var isFavorite: Boolean = false
+    var isFavorite: Boolean = false,
 )
