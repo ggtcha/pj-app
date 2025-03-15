@@ -15,12 +15,6 @@
         app:iconTint="@color/black"
         app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/nav_cart"
-        android:icon="@drawable/ic_history"
-        app:iconSize="24dp"
-        app:iconTint="@color/black"
-        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/nav_booking"
