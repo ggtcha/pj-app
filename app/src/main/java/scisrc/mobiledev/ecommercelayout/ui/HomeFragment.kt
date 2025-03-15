@@ -29,7 +29,10 @@ class HomeFragment : Fragment() {
             location = "สุพรรณบุรี",
             imageRes = R.drawable.bungchawak,
             description = "ที่พักในอุทยานแห่งชาติบึงฉวาก ตั้งอยู่ท่ามกลางธรรมชาติ อากาศบริสุทธิ์ เหมาะสำหรับการพักผ่อนแบบครอบครัวและการเดินป่าศึกษาธรรมชาติ",
-            isFavorite = false
+            isFavorite = false,
+            openingHours = "08:00 - 18:00 น.",
+            bungalowPrice = "1,500 - 3,000 บาท/คืน",
+            tentPrice = "200 - 500 บาท/คืน"
         ),
         ParkModel(
             name = "อุทยานแห่งชาติปางสีดา",
@@ -38,7 +41,10 @@ class HomeFragment : Fragment() {
             location = "สระแก้ว",
             imageRes = R.drawable.pangsida,
             description = "อุทยานแห่งชาติปางสีดา มีความหลากหลายของธรรมชาติ ทั้งภูเขาและป่าไม้ เส้นทางเดินป่ามีความท้าทาย พร้อมพื้นที่พักผ่อนในบรรยากาศสงบ",
-            isFavorite = false
+            isFavorite = false,
+            openingHours = "06:00 - 18:00 น.",
+            bungalowPrice = "1,200 - 2,500 บาท/คืน",
+            tentPrice = "150 - 400 บาท/คืน"
         ),
         ParkModel(
             name = "อุทยานแห่งชาติเขาใหญ่",
@@ -47,8 +53,11 @@ class HomeFragment : Fragment() {
             location = "นครราชสีมา",
             imageRes = R.drawable.khaoyai,
             description = "ที่พักในอุทยานแห่งชาติเขาใหญ่ อยู่ท่ามกลางธรรมชาติที่อุดมสมบูรณ์ เหมาะสำหรับการเดินป่าและการส่องสัตว์",
-            isFavorite = false
-        ),
+            isFavorite = false,
+            openingHours = "06:00 - 18:00 น.",
+            bungalowPrice = "2,000 - 4,000 บาท/คืน",
+            tentPrice = "300 - 600 บาท/คืน"
+        )
         // เพิ่มข้อมูลอุทยานอื่นๆ ที่นี่
     )
 
@@ -97,7 +106,7 @@ class HomeFragment : Fragment() {
             bundle.putString("parkName", park.name)
             parkDetailFragment.arguments = bundle
 
-            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction() // หรือ requireActivity().supportFragmentManager.beginTransaction()
+            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
             transaction.replace(R.id.fragment_container, parkDetailFragment)
             transaction.addToBackStack(null)
             transaction.commit()

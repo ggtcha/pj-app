@@ -8,7 +8,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView  // เพิ่ม ImageView
+import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -24,20 +24,22 @@ class BookingFragment : Fragment() {
     private lateinit var locationTextView: TextView
     private lateinit var descriptionTextView: TextView
     private lateinit var datesEditText: EditText
-    private lateinit var numberOfPeopleEditText: EditText  // จำนวนคน
+    private lateinit var numberOfPeopleEditText: EditText
     private lateinit var confirmButton: Button
-    private lateinit var parkSpinner: Spinner  // สปินเนอร์เลือกอุทยาน
-    private lateinit var accommodationTypeSpinner: Spinner  // สปินเนอร์เลือกประเภทที่พัก
-    private lateinit var parkImageView: ImageView  // เพิ่ม ImageView สำหรับแสดงรูปภาพที่เลือก
+    private lateinit var parkSpinner: Spinner
+    private lateinit var accommodationTypeSpinner: Spinner
+    private lateinit var parkImageView: ImageView
+    private lateinit var openingHoursTextView: TextView
+    private lateinit var bungalowPriceTextView: TextView
+    private lateinit var tentPriceTextView: TextView
 
-    private var selectedPark: ParkModel? = null  // ใช้ ParkModel แทน Booking
+    private var selectedPark: ParkModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_booking, container, false)
 
-        // เชื่อมต่อกับ UI
         parkNameTextView = view.findViewById(R.id.parkNameTextView)
         priceTextView = view.findViewById(R.id.priceTextView)
         locationTextView = view.findViewById(R.id.locationTextView)
@@ -47,9 +49,13 @@ class BookingFragment : Fragment() {
         confirmButton = view.findViewById(R.id.confirmBookingButton)
         parkSpinner = view.findViewById(R.id.parkSpinner)
         accommodationTypeSpinner = view.findViewById(R.id.accommodationTypeSpinner)
-        parkImageView = view.findViewById(R.id.parkImageView)  // เชื่อมต่อ ImageView
+        parkImageView = view.findViewById(R.id.parkImageView)
 
-        // ตั้งค่า Spinner สำหรับอุทยาน
+        // เพิ่มการเชื่อมโยง TextView สำหรับเปิดปิดเวลา, ราคาบ้านพัก, และราคาเต็นท์
+        openingHoursTextView = view.findViewById(R.id.openingHoursTextView)
+        bungalowPriceTextView = view.findViewById(R.id.bungalowPriceTextView)
+        tentPriceTextView = view.findViewById(R.id.tentPriceTextView)
+
         val parks = listOf(
             "อุทยานแห่งชาติบึงฉวาก",
             "อุทยานแห่งชาติปางสีดา",
@@ -70,13 +76,11 @@ class BookingFragment : Fragment() {
         parkAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         parkSpinner.adapter = parkAdapter
 
-        // ตั้งค่า Spinner สำหรับประเภทที่พัก
         val accommodationTypes = listOf("เต็นท์", "บ้านพัก")
         val accommodationAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, accommodationTypes)
         accommodationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         accommodationTypeSpinner.adapter = accommodationAdapter
 
-        // ฟังก์ชันเมื่อเลือกอุทยานจาก Spinner
         parkSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedParkName = parks[position]
@@ -88,7 +92,10 @@ class BookingFragment : Fragment() {
                         location = "สุพรรณบุรี",
                         imageRes = R.drawable.bungchawak,
                         description = "ที่พักในอุทยานแห่งชาติบึงฉวาก ตั้งอยู่ท่ามกลางธรรมชาติ อากาศบริสุทธิ์ เหมาะสำหรับการพักผ่อนแบบครอบครัวและการเดินป่าศึกษาธรรมชาติ",
-                        isFavorite = false
+                        isFavorite = false,
+                        openingHours = "08:00 - 18:00 น.",
+                        bungalowPrice = "1,500 - 3,000 บาท/คืน",
+                        tentPrice = "200 - 500 บาท/คืน"
                     )
                     "อุทยานแห่งชาติปางสีดา" -> ParkModel(
                         name = "อุทยานแห่งชาติปางสีดา",
@@ -97,7 +104,10 @@ class BookingFragment : Fragment() {
                         location = "สระแก้ว",
                         imageRes = R.drawable.pangsida,
                         description = "อุทยานแห่งชาติปางสีดา มีความหลากหลายของธรรมชาติ ทั้งภูเขาและป่าไม้ เส้นทางเดินป่ามีความท้าทาย พร้อมพื้นที่พักผ่อนในบรรยากาศสงบ",
-                        isFavorite = false
+                        isFavorite = false,
+                        openingHours = "06:00 - 18:00 น.",
+                        bungalowPrice = "1,200 - 2,500 บาท/คืน",
+                        tentPrice = "150 - 400 บาท/คืน"
                     )
                     "อุทยานแห่งชาติเขาใหญ่" -> ParkModel(
                         name = "อุทยานแห่งชาติเขาใหญ่",
@@ -106,109 +116,36 @@ class BookingFragment : Fragment() {
                         location = "นครราชสีมา",
                         imageRes = R.drawable.khaoyai,
                         description = "ที่พักในอุทยานแห่งชาติเขาใหญ่ อยู่ท่ามกลางธรรมชาติที่อุดมสมบูรณ์ เหมาะสำหรับการเดินป่าและการส่องสัตว์",
-                        isFavorite = false
-                    )
-                    "อุทยานแห่งชาติเอราวัณ" -> ParkModel(
-                        name = "อุทยานแห่งชาติเอราวัณ",
-                        price = 1300.0,
-                        availability = true,
-                        location = "กาญจนบุรี",
-                        imageRes = R.drawable.erawan,
-                        description = "อุทยานแห่งชาติเอราวัณเป็นแหล่งท่องเที่ยวธรรมชาติที่มีชื่อเสียงในเรื่องน้ำตกเอราวัณที่สวยงามและพื้นที่สำหรับเดินป่า",
-                        isFavorite = false
-                    )
-                    "อุทยานแห่งชาติเขาสามร้อยยอด" -> ParkModel(
-                        name = "อุทยานแห่งชาติเขาสามร้อยยอด",
-                        price = 1100.0,
-                        availability = true,
-                        location = "ประจวบคีรีขันธ์",
-                        imageRes = R.drawable.samroiyot,
-                        description = "อุทยานแห่งชาติเขาสามร้อยยอดมีทิวทัศน์ของทะเลและภูเขาที่สวยงาม พร้อมกับเส้นทางเดินป่าและการชมสัตว์ป่า",
-                        isFavorite = false
-                    )
-                    "อุทยานแห่งชาติน้ำตกคลองแก้ว" -> ParkModel(
-                        name = "อุทยานแห่งชาติน้ำตกคลองแก้ว",
-                        price = 950.0,
-                        availability = true,
-                        location = "จันทบุรี",
-                        imageRes = R.drawable.khlongkaeo,
-                        description = "อุทยานแห่งชาติน้ำตกคลองแก้วมีน้ำตกที่สวยงามและพื้นที่ธรรมชาติที่เงียบสงบ เหมาะแก่การท่องเที่ยวเพื่อพักผ่อน",
-                        isFavorite = false
-                    )
-                    "อุทยานแห่งชาติเขาชะเมา-เขาวง" -> ParkModel(
-                        name = "อุทยานแห่งชาติเขาชะเมา-เขาวง",
-                        price = 980.0,
-                        availability = true,
-                        location = "ระยอง",
-                        imageRes = R.drawable.khaochamao,
-                        description = "อุทยานแห่งชาติเขาชะเมา-เขาวงมีเส้นทางเดินป่าที่น่าสนใจ และเป็นแหล่งอนุรักษ์สัตว์ป่าหายาก",
-                        isFavorite = false
-                    )
-                    "อุทยานแห่งชาติน้ำตกสามหลั่น" -> ParkModel(
-                        name = "อุทยานแห่งชาติน้ำตกสามหลั่น",
-                        price = 1200.0,
-                        availability = true,
-                        location = "สระบุรี",
-                        imageRes = R.drawable.samlan,
-                        description = "อุทยานแห่งชาติน้ำตกสามหลั่นมีน้ำตกที่สวยงาม และเหมาะกับการพักผ่อนในบรรยากาศธรรมชาติ",
-                        isFavorite = false
-                    )
-                    "อุทยานแห่งชาติน้ำตกเจ็ดสาวน้อย" -> ParkModel(
-                        name = "อุทยานแห่งชาติน้ำตกเจ็ดสาวน้อย",
-                        price = 1100.0,
-                        availability = true,
-                        location = "สระบุรี",
-                        imageRes = R.drawable.chetsaonoi,
-                        description = "น้ำตกเจ็ดสาวน้อยมีความสวยงามของธรรมชาติและสามารถเดินป่าไปยังน้ำตกต่างๆ",
-                        isFavorite = false
-                    )
-                    "อุทยานแห่งชาติน้ำพอง" -> ParkModel(
-                        name = "อุทยานแห่งชาติน้ำพอง",
-                        price = 1050.0,
-                        availability = true,
-                        location = "ขอนแก่น",
-                        imageRes = R.drawable.namphong,
-                        description = "อุทยานแห่งชาติน้ำพองเหมาะแก่การเดินป่าและศึกษาธรรมชาติในพื้นที่เขียวขจี",
-                        isFavorite = false
-                    )
-                    "อุทยานแห่งชาติป่าหินงาม" -> ParkModel(
-                        name = "อุทยานแห่งชาติป่าหินงาม",
-                        price = 950.0,
-                        availability = true,
-                        location = "ชัยภูมิ",
-                        imageRes = R.drawable.pahinngam,
-                        description = "ป่าหินงามเป็นแหล่งท่องเที่ยวที่มีลักษณะทางธรรมชาติเป็นหินรูปทรงแปลกตา",
-                        isFavorite = false
-                    )
-                    "อุทยานแห่งชาติตะรุเตา - จังหวัดสตูล" -> ParkModel(
-                        name = "อุทยานแห่งชาติตะรุเตา - จังหวัดสตูล",
-                        price = 1500.0,
-                        availability = true,
-                        location = "สตูล",
-                        imageRes = R.drawable.tarutao,
-                        description = "อุทยานแห่งชาติตะรุเตามีชายหาดที่สวยงามและเป็นแหล่งท่องเที่ยวทางทะเลที่ยอดเยี่ยม",
-                        isFavorite = false
-                    )
-                    "อุทยานแห่งชาติศรีพังงา - จังหวัดพังงา" -> ParkModel(
-                        name = "อุทยานแห่งชาติศรีพังงา - จังหวัดพังงา",
-                        price = 1400.0,
-                        availability = true,
-                        location = "พังงา",
-                        imageRes = R.drawable.sriphangnga,
-                        description = "อุทยานแห่งชาติศรีพังงามีทิวทัศน์สวยงามของภูเขาและทะเล เหมาะกับการทำกิจกรรมทางทะเลและการท่องเที่ยว",
-                        isFavorite = false
+                        isFavorite = false,
+                        openingHours = "06:00 - 18:00 น.",
+                        bungalowPrice = "2,000 - 4,000 บาท/คืน",
+                        tentPrice = "300 - 600 บาท/คืน"
                     )
                     else -> null
                 }
-
-
-                // แสดงข้อมูลที่พักหลังเลือกอุทยาน
                 selectedPark?.let {
+                    parkImageView.setImageResource(it.imageRes)
                     parkNameTextView.text = it.name
                     priceTextView.text = "ราคา: ฿ ${it.price}"
                     locationTextView.text = "สถานที่: ${it.location}"
                     descriptionTextView.text = it.description
-                    parkImageView.setImageResource(it.imageRes)  // เปลี่ยนรูปภาพใน ImageView
+                    openingHoursTextView.text = "เวลาเปิดปิด: ${it.openingHours}"
+                    bungalowPriceTextView.text = "ราคาบ้านพัก: ${it.bungalowPrice}"
+                    tentPriceTextView.text = "ราคาเต็นท์: ${it.tentPrice}"
+                }
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>) {}
+        }
+
+        accommodationTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parentView: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val accommodationType = accommodationTypes[position]
+                selectedPark?.let {
+                    when (accommodationType) {
+                        "เต็นท์" -> priceTextView.text = "ราคาเต็นท์: ฿ ${it.tentPrice}"
+                        "บ้านพัก" -> priceTextView.text = "ราคาบ้านพัก: ฿ ${it.bungalowPrice}"
+                    }
                 }
             }
 
@@ -216,18 +153,15 @@ class BookingFragment : Fragment() {
         }
 
         confirmButton.setOnClickListener {
-            // เมื่อกดยืนยันการจอง
             val numberOfPeople = numberOfPeopleEditText.text.toString()
             val checkInDate = datesEditText.text.toString()
 
             if (numberOfPeople.isNotEmpty() && checkInDate.isNotEmpty() && selectedPark != null) {
-                // เพิ่มการจองที่พัก
                 selectedPark?.let {
                     BookingManager.addToBookings(it)
                     showToast("จองที่พักเรียบร้อยแล้ว!")
                 }
             } else {
-                // ถ้าไม่กรอกข้อมูล
                 showToast("กรุณากรอกข้อมูลทั้งหมด")
             }
         }
@@ -236,7 +170,6 @@ class BookingFragment : Fragment() {
     }
 
     private fun showToast(message: String) {
-        // ฟังก์ชันสำหรับแสดง Toast
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }

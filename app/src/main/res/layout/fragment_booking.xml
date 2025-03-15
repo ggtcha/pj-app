@@ -74,7 +74,26 @@
                     android:textSize="16sp"
                     android:textColor="#666666" />
             </LinearLayout>
+            <TextView
+                android:id="@+id/openingHoursTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="เวลาเปิดปิด"
+                android:textSize="16sp"/>
 
+            <TextView
+                android:id="@+id/bungalowPriceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ราคาบ้านพัก"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tentPriceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ราคาเต็นท์"
+                android:textSize="16sp"/>
             <TextView
                 android:id="@+id/descriptionTextView"
                 android:layout_width="match_parent"
