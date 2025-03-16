@@ -1,25 +1,23 @@
 package scisrc.mobiledev.ecommercelayout.ui
 
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import scisrc.mobiledev.ecommercelayout.ParkModel
 import scisrc.mobiledev.ecommercelayout.R
 
 class BookingFragment : Fragment() {
 
     private lateinit var searchEditText: EditText
-    private lateinit var searchButton: Button
-    private lateinit var parkListView: ListView
-    private lateinit var parkImageView: ImageView
-    private lateinit var parkNameTextView: TextView
-    private lateinit var locationTextView: TextView
-    private lateinit var descriptionTextView: TextView
-    private lateinit var openingHoursTextView: TextView
+    private lateinit var parkRecyclerView: RecyclerView
+    private lateinit var parkAdapter: ParkAdapter
 
     private val parks = listOf(
         ParkModel("อุทยานแห่งชาติบึงฉวาก", 1200.0, true, "สุพรรณบุรี", R.drawable.bungchawak,
@@ -49,8 +47,7 @@ class BookingFragment : Fragment() {
         ParkModel("อุทยานแห่งชาติศรีพังงา - จังหวัดพังงา", 1200.0, true, "พังงา", R.drawable.sriphangnga,
             "น้ำตกและป่าเขตร้อนชื้น", false, "07:00 - 17:00 น.", "1,500 - 3,000 บาท/คืน", "250 - 500 บาท/คืน")
     )
-
-    private lateinit var adapter: ArrayAdapter<String>
+    private var filteredParks = parks.toMutableList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,102 +55,52 @@ class BookingFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_booking, container, false)
 
-        try {
-            // Initialize views
-            searchEditText = view.findViewById(R.id.search_edit_text)
-            searchButton = view.findViewById(R.id.search_button)
-            parkListView = view.findViewById(R.id.park_list_view)
-            parkImageView = view.findViewById(R.id.park_image)
-            parkNameTextView = view.findViewById(R.id.park_name)
-            locationTextView = view.findViewById(R.id.location_text)
-            descriptionTextView = view.findViewById(R.id.description_text)
-            openingHoursTextView = view.findViewById(R.id.opening_hours_text)
+        searchEditText = view.findViewById(R.id.search_edit_text)
+        parkRecyclerView = view.findViewById(R.id.park_recycler_view)
 
-            // Set up initial adapter with all parks
-            adapter = ArrayAdapter(
-                requireContext(),
-                android.R.layout.simple_list_item_1,
-                parks.map { it.name }
-            )
-            parkListView.adapter = adapter
+        parkRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-            // Show first park as default
-            if (parks.isNotEmpty()) {
-                val defaultPark = parks[0]
-                parkImageView.setImageResource(defaultPark.imageRes)
-                parkNameTextView.text = defaultPark.name
-                locationTextView.text = defaultPark.location
-                descriptionTextView.text = defaultPark.description
-                openingHoursTextView.text = "เวลาเปิด-ปิด: ${defaultPark.openingHours}"
-            }
-
-            // Search button click
-            searchButton.setOnClickListener {
-                val query = searchEditText.text.toString().trim()
-                filterParks(query)
-            }
-
-            // ListView item click
-            parkListView.setOnItemClickListener { _, _, position, _ ->
-                val filteredParks = getFilteredParks(searchEditText.text.toString().trim())
-                val selectedPark = filteredParks[position]
-                parkImageView.setImageResource(selectedPark.imageRes)
-                parkNameTextView.text = selectedPark.name
-                locationTextView.text = selectedPark.location
-                descriptionTextView.text = selectedPark.description
-                openingHoursTextView.text = "เวลาเปิด-ปิด: ${selectedPark.openingHours}"
-
-                val detailsFragment = DetailsFragment()
-                val bundle = Bundle()
-                bundle.putSerializable("selected_park", selectedPark)
-                detailsFragment.arguments = bundle
-
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, detailsFragment)
-                    .addToBackStack(null)
-                    .commit()
-            }
-        } catch (e: Exception) {
-            Log.e("BookingFragment", "Error in onCreateView: ${e.message}")
-            Toast.makeText(context, "เกิดข้อผิดพลาด: ${e.message}", Toast.LENGTH_LONG).show()
+        // ✅ ใช้ Adapter ที่รองรับการอัปเดตข้อมูล
+        parkAdapter = ParkAdapter(filteredParks) { selectedPark ->
+            goToDetailsFragment(selectedPark)
         }
+        parkRecyclerView.adapter = parkAdapter
+
+        // ✅ เพิ่มการฟังการเปลี่ยนแปลงของข้อความในช่องค้นหา
+        searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                filterParks(s.toString().trim())
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
 
         return view
     }
 
-    // Filter parks based on search query
+    // ✅ ฟังก์ชันค้นหาอุทยาน
     private fun filterParks(query: String) {
-        val filteredParks = getFilteredParks(query)
-        adapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_list_item_1,
-            filteredParks.map { it.name }
-        )
-        parkListView.adapter = adapter
-
-        // Update UI with first filtered result if available
-        if (filteredParks.isNotEmpty()) {
-            val firstPark = filteredParks[0]
-            parkImageView.setImageResource(firstPark.imageRes)
-            parkNameTextView.text = firstPark.name
-            locationTextView.text = firstPark.location
-            descriptionTextView.text = firstPark.description
-            openingHoursTextView.text = "เวลาเปิด-ปิด: ${firstPark.openingHours}"
+        filteredParks = if (query.isEmpty()) {
+            parks.toMutableList()
         } else {
-            parkNameTextView.text = "ไม่พบอุทยาน"
-            locationTextView.text = ""
-            descriptionTextView.text = ""
-            openingHoursTextView.text = ""
-            parkImageView.setImageResource(android.R.drawable.ic_menu_search) // Placeholder
+            parks.filter { it.name.contains(query, ignoreCase = true) }.toMutableList()
         }
+
+        // ✅ อัปเดตรายการที่แสดง
+        parkAdapter.updateList(filteredParks)
     }
 
-    // Get filtered parks list
-    private fun getFilteredParks(query: String): List<ParkModel> {
-        return if (query.isEmpty()) {
-            parks
-        } else {
-            parks.filter { it.name.contains(query, ignoreCase = true) }
-        }
+    private fun goToDetailsFragment(selectedPark: ParkModel) {
+        val detailsFragment = DetailsFragment()
+        val bundle = Bundle()
+        bundle.putSerializable("selected_park", selectedPark)
+        detailsFragment.arguments = bundle
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, detailsFragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

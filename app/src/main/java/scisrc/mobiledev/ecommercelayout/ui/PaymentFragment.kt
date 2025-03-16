@@ -1,4 +1,3 @@
-// PaymentFragment.kt
 package scisrc.mobiledev.ecommercelayout.ui
 
 import android.os.Bundle
@@ -15,6 +14,8 @@ class PaymentFragment : Fragment() {
     private lateinit var paymentSpinner: Spinner
     private lateinit var summaryText: TextView
     private lateinit var confirmButton: Button
+    private lateinit var bankAccountText: TextView
+    private lateinit var qrImageView: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,8 +31,20 @@ class PaymentFragment : Fragment() {
         paymentSpinner = view.findViewById(R.id.payment_spinner)
         summaryText = view.findViewById(R.id.summary_text)
         confirmButton = view.findViewById(R.id.confirm_button)
+        bankAccountText = view.findViewById(R.id.bank_account_text)
+        qrImageView = view.findViewById(R.id.qr_code_image)
 
-        val paymentMethods = listOf("บัตรเครดิต", "โอนเงินธนาคาร", "ชำระผ่านมือถือ")
+        val price = if (accommodation == "เต็นท์") selectedPark.tentPrice else selectedPark.bungalowPrice
+
+        summaryText.text = """
+            📍 อุทยาน: ${selectedPark.name}
+            🏕 ที่พัก: $accommodation
+            📅 วันที่: $date
+            👤 จำนวนคน: $people
+            💰 ราคา: $price บาท/คืน
+        """.trimIndent()
+
+        val paymentMethods = listOf("พร้อมเพย์ (QR Code)", "โอนเงินธนาคาร")
         val adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
@@ -40,16 +53,24 @@ class PaymentFragment : Fragment() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         paymentSpinner.adapter = adapter
 
-        summaryText.text = """
-            อุทยาน: ${selectedPark.name}
-            ที่พัก: $accommodation
-            วันที่: $date
-            จำนวนคน: $people
-            ราคา: ${if (accommodation == "เต็นท์") selectedPark.tentPrice else selectedPark.bungalowPrice}
-        """.trimIndent()
+        paymentSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (position == 0) {
+                    bankAccountText.visibility = View.GONE
+                    qrImageView.visibility = View.VISIBLE
+                    qrImageView.setImageResource(R.drawable.qr_code_sample)
+                } else {
+                    qrImageView.visibility = View.GONE
+                    bankAccountText.visibility = View.VISIBLE
+                    bankAccountText.text = "🏦 โอนเงินมาที่: 123-456-789 ธนาคาร A"
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
         confirmButton.setOnClickListener {
-            Toast.makeText(context, "ยืนยันการจองเรียบร้อย!", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "✅ ยืนยันการจองเรียบร้อย!", Toast.LENGTH_LONG).show()
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, BookingFragment())
                 .commit()
