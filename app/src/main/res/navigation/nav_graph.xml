@@ -43,4 +43,10 @@
             app:destination="@id/bookingFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/bookingHistoryFragment"
+        android:name="scisrc.mobiledev.ecommercelayout.ui.BookingHistoryFragment"
+        android:label="BookingHistoryFragment"
+        tools:layout="@layout/fragment_booking_history" />
+
 </navigation>

@@ -16,15 +16,18 @@ class DetailsFragment : Fragment() {
 
     private lateinit var parkImage: ImageView
     private lateinit var accommodationSpinner: Spinner
-    private lateinit var dateTextView: TextView
     private lateinit var peopleEditText: EditText
     private lateinit var priceText: TextView
     private lateinit var nextButton: Button
     private lateinit var parkNameText: TextView
+    private lateinit var checkInDateTextView: TextView
+    private lateinit var checkOutDateTextView: TextView
 
     private lateinit var selectedPark: ParkModel
-    private var selectedDate: String? = null
+    private var selectedCheckInDate: String? = null
+    private var selectedCheckOutDate: String? = null
     private var selectedAccommodation: String? = null
+    private var selectedPricePerNight: Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,28 +35,26 @@ class DetailsFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_details, container, false)
 
-        // ✅ รับค่าจาก arguments (ป้องกัน null)
-        selectedPark = requireArguments().getSerializable("selected_park") as? ParkModel
-            ?: throw IllegalArgumentException("Selected park is required")
+        selectedPark = requireArguments().getSerializable("selected_park") as ParkModel
 
-        // ✅ ผูก UI กับตัวแปร
+        // ผูก UI
         parkImage = view.findViewById(R.id.park_image)
         parkNameText = view.findViewById(R.id.park_name_text)
         accommodationSpinner = view.findViewById(R.id.accommodation_spinner)
-        dateTextView = view.findViewById(R.id.date_text_view)
+        checkInDateTextView = view.findViewById(R.id.check_in_date_text_view)
+        checkOutDateTextView = view.findViewById(R.id.check_out_date_text_view)
         peopleEditText = view.findViewById(R.id.people_count)
         priceText = view.findViewById(R.id.price_text)
         nextButton = view.findViewById(R.id.next_button)
 
-        // ✅ แสดงชื่ออุทยาน
         parkNameText.text = "อุทยาน: ${selectedPark.name}"
 
-        // ✅ โหลดรูปภาพของอุทยาน
+        // โหลดรูปภาพของอุทยาน
         Glide.with(this)
             .load(selectedPark.imageRes)
             .into(parkImage)
 
-        // ✅ ตั้งค่า Spinner สำหรับที่พัก
+        // ตั้งค่า Spinner สำหรับที่พัก
         val accommodationTypes = listOf("เต็นท์", "บ้านพัก")
         val accommodationAdapter = ArrayAdapter(
             requireContext(),
@@ -63,27 +64,29 @@ class DetailsFragment : Fragment() {
         accommodationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         accommodationSpinner.adapter = accommodationAdapter
 
-        // ✅ ตั้งค่าเริ่มต้น
         selectedAccommodation = accommodationTypes[0]
-        priceText.text = "ราคา: ${selectedPark.tentPrice}"
+        selectedPricePerNight = selectedPark.tentPrice.replace(" บาท/คืน", "").toDouble()
+        priceText.text = "ราคา: ฿ ${selectedPricePerNight}"
 
-        // ✅ อัปเดตราคาเมื่อเลือกที่พัก
+        // คำนวณราคาหลังจากเลือกที่พัก
         accommodationSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 selectedAccommodation = accommodationTypes[position]
-                priceText.text = if (position == 0) {
-                    "ราคา: ${selectedPark.tentPrice}"
+                if (position == 0) {
+                    selectedPricePerNight = selectedPark.tentPrice.replace(" บาท/คืน", "").toDouble()
+                    priceText.text = "ราคา: ฿ ${selectedPricePerNight}"
                 } else {
-                    "ราคา: ${selectedPark.bungalowPrice}"
+                    selectedPricePerNight = selectedPark.bungalowPrice.replace(" บาท/คืน", "").toDouble()
+                    priceText.text = "ราคา: ฿ ${selectedPricePerNight}"
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        // ✅ เปิด DatePickerDialog เมื่อกดที่ `dateTextView`
-        dateTextView.setOnClickListener {
-            showDatePickerDialog()
+        // เลือกวันที่
+        checkInDateTextView.setOnClickListener {
+            showDatePickerDialog(true) // true คือเลือกวันเข้าพัก
         }
 
         nextButton.setOnClickListener {
@@ -93,48 +96,69 @@ class DetailsFragment : Fragment() {
         return view
     }
 
-    // ✅ ฟังก์ชันเปิด DatePickerDialog
-    private fun showDatePickerDialog() {
+    // ฟังก์ชันเปิด DatePickerDialog
+    private fun showDatePickerDialog(isCheckIn: Boolean) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-            selectedDate = "$selectedYear-${selectedMonth + 1}-$selectedDay"
-            dateTextView.text = selectedDate
+            val selectedDate = "$selectedYear-${selectedMonth + 1}-$selectedDay"
+            if (isCheckIn) {
+                selectedCheckInDate = selectedDate
+                checkInDateTextView.text = "วันที่เข้าพัก: $selectedDate"
+                showDatePickerDialog(false) // ให้เลือกวันที่ออก
+            } else {
+                selectedCheckOutDate = selectedDate
+                checkOutDateTextView.text = "วันที่ออก: $selectedDate"
+                calculatePrice()
+            }
         }, year, month, day)
 
         datePickerDialog.show()
     }
 
-    // ✅ ฟังก์ชันกดปุ่ม "ยืนยันการจอง"
+    // ฟังก์ชันคำนวณราคา
+    private fun calculatePrice() {
+        if (selectedCheckInDate != null && selectedCheckOutDate != null) {
+            val checkInCalendar = Calendar.getInstance()
+            val checkOutCalendar = Calendar.getInstance()
+
+            val checkInDateArray = selectedCheckInDate!!.split("-")
+            val checkOutDateArray = selectedCheckOutDate!!.split("-")
+
+            checkInCalendar.set(checkInDateArray[0].toInt(), checkInDateArray[1].toInt() - 1, checkInDateArray[2].toInt())
+            checkOutCalendar.set(checkOutDateArray[0].toInt(), checkOutDateArray[1].toInt() - 1, checkOutDateArray[2].toInt())
+
+            val daysBetween = ((checkOutCalendar.timeInMillis - checkInCalendar.timeInMillis) / (1000 * 60 * 60 * 24)).toInt()
+
+            if (daysBetween > 0) {
+                val totalPrice = selectedPricePerNight * daysBetween
+                priceText.text = "ราคา: ฿ $totalPrice"
+            }
+        }
+    }
+
+    // ฟังก์ชันกดปุ่ม "ยืนยันการจอง"
     private fun handleBooking() {
         val people = peopleEditText.text.toString().trim()
-        val date = selectedDate ?: ""
-
         if (people.isEmpty()) {
             Toast.makeText(context, "กรุณาระบุจำนวนคน", Toast.LENGTH_SHORT).show()
             return
         }
 
-        if (date.isEmpty()) {
-            Toast.makeText(context, "กรุณาเลือกวันที่", Toast.LENGTH_SHORT).show()
+        if (selectedCheckInDate == null || selectedCheckOutDate == null) {
+            Toast.makeText(context, "กรุณาเลือกวันที่เข้าพักและออก", Toast.LENGTH_SHORT).show()
             return
         }
-
-        if (selectedAccommodation == null) {
-            Toast.makeText(context, "กรุณาเลือกที่พัก", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        nextButton.isEnabled = false // ป้องกันการกดซ้ำ
 
         val paymentFragment = PaymentFragment()
         val bundle = Bundle()
         bundle.putSerializable("selected_park", selectedPark)
         bundle.putString("accommodation", selectedAccommodation)
-        bundle.putString("date", date)
+        bundle.putString("check_in_date", selectedCheckInDate)
+        bundle.putString("check_out_date", selectedCheckOutDate)
         bundle.putString("people", people)
         paymentFragment.arguments = bundle
 

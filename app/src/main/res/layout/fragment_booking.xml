@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:text="ค้นหา"
             android:layout_marginStart="8dp"
-            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/colorPrimary"
             android:textColor="@android:color/white"
             android:padding="12dp"/>
     </LinearLayout>
@@ -43,9 +43,6 @@
         android:layout_weight="1"
         android:layout_marginTop="8dp"/>
 
-    <!-- รูปภาพอุทยาน -->
-
-    <!-- ข้อมูลอุทยาน -->
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"

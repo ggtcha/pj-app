@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp"
-    android:background="@android:color/white">
+    android:background="#F0F4F8"
+    android:padding="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,14 +11,17 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
-        <!-- รูปภาพอุทยาน -->
+        <!-- การแสดงรูปภาพอุทยาน -->
         <ImageView
             android:id="@+id/park_image"
             android:layout_width="match_parent"
             android:layout_height="220dp"
             android:scaleType="centerCrop"
             android:layout_marginBottom="12dp"
-            android:contentDescription="รูปภาพอุทยาน"/>
+            android:contentDescription="รูปภาพอุทยาน"
+            android:clipToOutline="true"
+            android:outlineProvider="background"
+            android:background="@drawable/rounded_corner_background"/>
 
         <!-- ชื่ออุทยาน -->
         <TextView
@@ -29,23 +31,23 @@
             android:text="อุทยานแห่งชาติ"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
+            android:textColor="#2E3D49"
+            android:fontFamily="sans-serif-medium"
             android:layout_marginBottom="12dp"/>
 
         <!-- CardView สำหรับเลือกข้อมูล -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="6dp"
             app:cardCornerRadius="16dp"
-            android:layout_marginBottom="16dp"
-            android:padding="16dp"
-            android:background="@android:color/white">
+            app:cardElevation="8dp"
+            android:layout_marginBottom="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <!-- เลือกประเภทที่พัก -->
                 <TextView
@@ -75,42 +77,33 @@
                     android:textColor="@android:color/black"
                     android:layout_marginBottom="8dp"/>
 
+                <!-- วันที่เข้าพัก -->
                 <TextView
-                    android:id="@+id/date_text_view"
+                    android:id="@+id/check_in_date_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="แตะเพื่อเลือกวันที่"
+                    android:text="วันที่เข้าพัก: --/--/----"
                     android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:padding="12dp"
                     android:background="@drawable/rounded_edittext"
                     android:gravity="center"
-                    android:clickable="true"
-                    android:focusable="true"
                     android:layout_marginBottom="16dp"/>
 
-                <!-- เลือกบ้านพัก -->
+                <!-- วันที่ออก -->
                 <TextView
-                    android:id="@+id/house_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="เลือกบ้านพัก"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black"
-                    android:layout_marginBottom="8dp"
-                    android:visibility="gone"/>
-
-                <Spinner
-                    android:id="@+id/house_spinner"
+                    android:id="@+id/check_out_date_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_edittext"
+                    android:text="วันที่ออก: --/--/----"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
                     android:padding="12dp"
-                    android:layout_marginBottom="16dp"
-                    android:visibility="gone"/>
+                    android:background="@drawable/rounded_edittext"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp"/>
 
-                <!-- กรอกจำนวนคน -->
+                <!-- จำนวนคน -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -140,14 +133,14 @@
                     android:textColor="@android:color/black"
                     android:layout_marginBottom="16dp"/>
 
-                <!-- ปุ่มไปหน้าชำระเงิน -->
+                <!-- ปุ่มยืนยันการจอง -->
                 <Button
                     android:id="@+id/next_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="ยืนยันการจอง"
                     android:layout_marginTop="16dp"
-                    android:backgroundTint="@color/purple_500"
+                    android:backgroundTint="@color/colorPrimary"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     android:padding="12dp"

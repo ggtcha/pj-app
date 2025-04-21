@@ -28,7 +28,7 @@ class ParkDetailFragment : Fragment() {
 
         parkImageView = view.findViewById(R.id.parkImageView)
         parkNameTextView = view.findViewById(R.id.parkNameTextView)
-        priceTextView = view.findViewById(R.id.priceTextView)
+
         locationTextView = view.findViewById(R.id.locationTextView)
         descriptionTextView = view.findViewById(R.id.descriptionTextView)
         openingHoursTextView = view.findViewById(R.id.openingHoursTextView) // ค้นหา TextView จาก View
@@ -44,7 +44,6 @@ class ParkDetailFragment : Fragment() {
         park?.let {
             parkImageView.setImageResource(it.imageRes)
             parkNameTextView.text = it.name
-            priceTextView.text = "ราคา: ฿ ${it.price}"
             locationTextView.text = "สถานที่: ${it.location}"
             descriptionTextView.text = it.description
             openingHoursTextView.text = "เวลาเปิดปิด: ${it.openingHours}"
@@ -66,8 +65,8 @@ class ParkDetailFragment : Fragment() {
                 description = "ที่พักในอุทยานแห่งชาติบึงฉวาก ตั้งอยู่ท่ามกลางธรรมชาติ อากาศบริสุทธิ์ เหมาะสำหรับการพักผ่อนแบบครอบครัวและการเดินป่าศึกษาธรรมชาติ",
                 isFavorite = false,
                 openingHours = "08:00 - 18:00 น.",
-                bungalowPrice = "1,500 - 3,000 บาท/คืน",
-                tentPrice = "200 - 500 บาท/คืน"
+                bungalowPrice = "500-800 บาท/คืน",
+                tentPrice = "80 บาท/คืน"
             ),
             ParkModel(
                 name = "อุทยานแห่งชาติปางสีดา",
@@ -78,8 +77,8 @@ class ParkDetailFragment : Fragment() {
                 description = "อุทยานแห่งชาติปางสีดา มีความหลากหลายของธรรมชาติ ทั้งภูเขาและป่าไม้ เส้นทางเดินป่ามีความท้าทาย พร้อมพื้นที่พักผ่อนในบรรยากาศสงบ",
                 isFavorite = false,
                 openingHours = "06:00 - 18:00 น.",
-                bungalowPrice = "1,200 - 2,500 บาท/คืน",
-                tentPrice = "150 - 400 บาท/คืน"
+                bungalowPrice = "500-800 บาท/คืน",
+                tentPrice = "80 บาท/คืน"
             ),
             ParkModel(
                 name = "อุทยานแห่งชาติเขาใหญ่",
@@ -90,7 +89,7 @@ class ParkDetailFragment : Fragment() {
                 description = "ที่พักในอุทยานแห่งชาติเขาใหญ่ อยู่ท่ามกลางธรรมชาติที่อุดมสมบูรณ์ เหมาะสำหรับการเดินป่าและการส่องสัตว์",
                 isFavorite = false,
                 openingHours = "06:00 - 18:00 น.",
-                bungalowPrice = "2,000 - 4,000 บาท/คืน",
+                bungalowPrice = "500-800 บาท/คืน",
                 tentPrice = "300 - 600 บาท/คืน"
             )
         )

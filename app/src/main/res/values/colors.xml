@@ -11,7 +11,7 @@
     <color name="confirm_button_background">#EACDA3</color> <!-- สีเนื้อกลาง -->
     <color name="green_500">#4CAF50</color> <!-- สีเขียวที่ใช้ได้ -->
     <color name="colorPrimary">#644015</color>
-    <color name="colorPrimaryy">#000000</color>
+    <color name="colorPrimaryy">#D1A57B</color>
     <color name="colorAccent">#0000FF</color>
     <color name="nav">#37763B</color>
     <color name="colorSecondary">#808080</color>

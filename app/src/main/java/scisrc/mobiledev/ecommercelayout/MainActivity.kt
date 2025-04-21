@@ -27,8 +27,8 @@ class MainActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener { menuItem ->
             val selectedFragment = when (menuItem.itemId) {
                 R.id.nav_home -> HomeFragment()
-                R.id.nav_profile -> ProfileFragment()
                 R.id.nav_booking -> BookingFragment()
+                R.id.nav_history -> BookingHistoryFragment()
                 else -> null
             }
 
